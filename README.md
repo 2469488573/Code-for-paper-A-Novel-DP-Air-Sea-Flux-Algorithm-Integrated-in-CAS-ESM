@@ -1,3 +1,96 @@
+This repository contains the code and data for the article "A new Air-sea flux algorithm based on deep learning and its application in Earth System Model".
+
+#Part One: Python Model Training Code (lhfDPL.py)
+This program represents the Torch part of a TBF instance program.
+
+## Step 1: Input Training, Validation, and Test Data
+
+Calculate the required features y from x1,x2,x3...xm, where m = feature_count.
+
+## Step 2: Network Architecture Design:
+Define the number of layers and the number of nodes in each layer, as well as the type of activation function.
+
+1.The number of nodes in each layer is set by point_count,n=point_count
+
+2.The number of layers is configured in nn.sequential{}, and the number of activation functions is set later as o.
+In nn.sequential, activation functions and linear layers alternate, with ReLU being the commonly used activation function in modern deep learning; Sigmoid, Tanh, etc., can also be used. In Torch, it is best to set them to be the same, and currently, KBF can only set it to one type.
+
+## Step 3: Set Optimization Method,Primarily modify the optimization method, epoch, batch_size, etc., to achieve the best optimization results and obtain optimal parameters  W,b,c,d.
+
+## Step 4: Review Training Results
+Generate two graphs showing variance and root mean square error, which help decide if the above steps need to be repeated.
+
+## Step 5: Model Parameter Export
+If the training results are satisfactory and correct parameters are obtained, export model parameters to a text file, then use Fortran to read them into TBF.
+Check m, n, o, function_kind, shuchucanshu.txt.
+Check w_input.txt, w_dense.txt, w_output.txt.
+Check b_input.txt, b_dense.txt, b_output.txt.
+
+## Step 6: Transfer *.txt Files
+Transfer the generated .txt files to the torch_bridge_fortran folder. The subsequent operations will be handled by the Fortran program.
+
+# Part Two: Fortran Model Code in the TBF Calculation Section
+fortran
+program main  
+The torch_bridge_fortran is written as a module for ease of use in other programs.
+Users can treat it as a black box, encapsulating the trained deep learning model inside.
+It requires input as a two-dimensional array x_array(cesm_m, ncol); cesm_m is the number of factors, and ncol matches that of CESM. The output y_cesm represents the computational output of the deep model.
+css
+x1, i --|              ______  
+x2, i --|             |     |     
+x3, i --|---------->  | box | ------->  y_cesm(i)  
+x4, i --|             |_____|  
+x5, i --|              
+This is an example program for calling TBF in CESM. The calculation is performed in the bridge program, with parameter passing handled there.
+The parameter optimization process occurs in the Python folder.
+The calculation part is mainly written in calculation.f90, and it is not advisable to modify it without a good understanding of the deep model.
+File reading happens in file_io.f90.
+In the Fortran model code, the following tasks need to be accomplished:
+
+## 1.Use the Module:
+
+fortran
+use bridge , only: tbf  
+
+## 2.Declare Variables and Dimensions:
+
+fortran
+implicit none   
+integer              :: m = 4  
+real, allocatable    :: x_array(:,:)  
+real                 :: y_cesm(5)  
+character(len = 100) :: dirname ="/data/chengxl/pblh_deeplearning/torch_bridge_fortran/python/"  
+
+## 3.Define Independent Variables (can be passed from other functions; if there are multiple variable vectors, array concatenation is necessary):
+
+fortran
+allocate(x_array(m,5))  
+
+x_array(:,1) = (/264.32004, 0.3210011, 14510.625, 52310.562/)  
+x_array(:,2) = (/264.31717, 0.32086015, 14449.125, 52227.875/)  
+x_array(:,3) = (/264.31717, 0.32067218, 14449.125, 52186.5/)  
+x_array(:,4) = (/264.31573, 0.3205077, 14449.125, 52062.375/)  
+x_array(:,5) = (/264.31573, 0.3203667, 14387.5, 51979.688/)  
+
+## 4.Call Subroutine tbf (passing array lengths, number of factors, independent variable array, and forecast array):
+
+Add functionality to pass a directory parameter so that tbf can be called multiple times.
+fortran
+
+call tbf(dirname, 5, m, x_array, y_cesm)  
+
+## Check and Pass Calculation Results:
+
+fortran
+print*, y_cesm   
+fortran
+print*, "Test"  
+end program main  
+
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+
 这个库里存放着文章“A new Air-sea flux algorithm based on deep learning and its application in Earth System Model”的代码和数据。
 
 # 第一部分  python 训练模型代码 lhfDPL.py
