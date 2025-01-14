@@ -35,12 +35,13 @@ program main
 The torch_bridge_fortran is written as a module for ease of use in other programs.
 Users can treat it as a black box, encapsulating the trained deep learning model inside.
 It requires input as a two-dimensional array x_array(cesm_m, ncol); cesm_m is the number of factors, and ncol matches that of CESM. The output y_cesm represents the computational output of the deep model.
-css
+```
 x1, i --|              ______  
 x2, i --|             |     |     
 x3, i --|---------->  | box | ------->  y_cesm(i)  
 x4, i --|             |_____|  
 x5, i --|              
+```
 This is an example program for calling TBF in CESM. The calculation is performed in the bridge program, with parameter passing handled there.
 The parameter optimization process occurs in the Python folder.
 The calculation part is mainly written in calculation.f90, and it is not advisable to modify it without a good understanding of the deep model.
@@ -49,21 +50,21 @@ In the Fortran model code, the following tasks need to be accomplished:
 
 ## 1.Use the Module:
 
-fortran
+```fortran
 use bridge , only: tbf  
-
+```
 ## 2.Declare Variables and Dimensions:
 
-fortran
+```fortran
 implicit none   
 integer              :: m = 4  
 real, allocatable    :: x_array(:,:)  
 real                 :: y_cesm(5)  
 character(len = 100) :: dirname ="/data/chengxl/pblh_deeplearning/torch_bridge_fortran/python/"  
-
+```
 ## 3.Define Independent Variables (can be passed from other functions; if there are multiple variable vectors, array concatenation is necessary):
 
-fortran
+```fortran
 allocate(x_array(m,5))  
 
 x_array(:,1) = (/264.32004, 0.3210011, 14510.625, 52310.562/)  
@@ -71,21 +72,21 @@ x_array(:,2) = (/264.31717, 0.32086015, 14449.125, 52227.875/)
 x_array(:,3) = (/264.31717, 0.32067218, 14449.125, 52186.5/)  
 x_array(:,4) = (/264.31573, 0.3205077, 14449.125, 52062.375/)  
 x_array(:,5) = (/264.31573, 0.3203667, 14387.5, 51979.688/)  
-
+```
 ## 4.Call Subroutine tbf (passing array lengths, number of factors, independent variable array, and forecast array):
 
 Add functionality to pass a directory parameter so that tbf can be called multiple times.
-fortran
-
+```fortran
 call tbf(dirname, 5, m, x_array, y_cesm)  
-
+```
 ## Check and Pass Calculation Results:
 
-fortran
+```fortran
 print*, y_cesm   
-fortran
+```
+```fortran
 print*, "Test"  
-end program main  
+```  
 
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
