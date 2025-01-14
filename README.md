@@ -83,9 +83,9 @@ call tbf(dirname, 5, m, x_array, y_cesm)
 
 ```fortran
 print*, y_cesm   
-```
-```fortran
-print*, "Test"  
+
+print*, "Test"
+
 ```  
 
 
@@ -127,13 +127,13 @@ print*, "Test"
 !其中使用者可以把它当成黑箱，深度学习训练好的模型被封装在其中
 !需要输入的是一个二维数组，x_array(cesm_m,ncol),cesm_m 是因子个数
 !ncol和cesm的ncol是一致的。输出的y_cesm就是深度模型的计算量
-'''fortran
+```fortran
 !x1, i --|              ______
 !x2, i --|             |     |     
 !x3, i --|---------->  | box | ------->  y_cesm(i)
 !x4, i --|             |_____|
 !x5, i --|              
-'''
+```
 !这是cesm中调用TBF的一个实例程序，在bridge程序中，计算被进行
 !参数传递的过程在bridge进行，
 !参数优化的过程则是在python文件夹下进行
@@ -145,25 +145,25 @@ print*, "Test"
 
 
 ## 1.use module 
-'''fortran
+```fortran
         use bridge , only: tbf
-'''         
+```        
 
 !-----------------------------------------------------------------
 
 ## 2.申明变量和变量的维度
-'''fortran
+```fortran
         implicit none 
         integer              :: m = 4
         real,allocatable     :: x_array(:,:)
         real                 :: y_cesm(5)
         character(len = 100) :: dirname ="/data/chengxl/&
                          pblh_deeplearning/torch_bridge_fortran/python/"
-''' 
+```
 !-----------------------------------------------------------------
 
 ## 3.明确自变量（可以通过其他函数传递）!如果多个变量向量则需要进行数组拼接
-'''fortran
+```fortran
         allocate(x_array(m,5))
 
         x_array(:,1) = (/264.32004,0.3210011,14510.625,52310.562/)
@@ -171,22 +171,20 @@ print*, "Test"
         x_array(:,3) = (/264.31717,0.32067218,14449.125,52186.5/)
         x_array(:,4) = (/264.31573,0.3205077,14449.125,52062.375/)
         x_array(:,5) = (/264.31573,0.3203667,14387.5,51979.688/)
-'''
+```
 !------------------------------------------------------------------
 
 ## 4.调用子程序tbf( 数组长度，因子个数，自变量数组, 预报量数组)
 !增加功能，传进去一个路径参数使得这个tbf能够被多次调用
-'''fortran
+```fortran
         call tbf(dirname,5,m,x_array,y_cesm)
-'''
+```
 !------------------------------------------------------------------
 
 ## 5.检查和传递计算结果
-'''fortran
+```fortran
         print*,y_cesm 
-'''
-!-------------------------------------------------------------------
-'''fortran
+
         print*,"测试"
-'''        
+```       
 
