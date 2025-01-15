@@ -1,4 +1,4 @@
-This repository contains the code and data for the article "A new Air-sea flux algorithm based on deep learning and its application in Earth System Model".
+This repository contains the code and data for the article "A Novel Algorithm for Air-Sea Flux Calculation Based on Deep Learning Integrated into CAS-ESM".
 
 # Part One: Python Model Training Code (lhfDPL.py)
 This program represents the Torch part of a TBF instance program.
@@ -92,7 +92,7 @@ print*, "Test"
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
 
-这个库里存放着文章“A new Air-sea flux algorithm based on deep learning and its application in Earth System Model”的代码和数据。
+这个库里存放着文章“A Novel Algorithm for Air-Sea Flux Calculation Based on Deep Learning Integrated into CAS-ESM”的代码和数据。
 
 # 第一部分  python 训练模型代码 lhfDPL.py
 这个程序是一个TBF的实例程序的torch部分，
