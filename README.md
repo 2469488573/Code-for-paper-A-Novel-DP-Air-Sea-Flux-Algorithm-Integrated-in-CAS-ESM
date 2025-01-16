@@ -1,4 +1,4 @@
-# English 
+# English Version
 
 This repository contains the code and data for the article "A Novel Algorithm for Air-Sea Flux Calculation Based on Deep Learning Integrated into CAS-ESM".
 
@@ -93,7 +93,7 @@ print*, "Test"
 
 -----------------------------------------------------------------------------------------------------------------------------------------------
 
-# 中文
+# 中文版本
 
 这个库里存放着文章“A Novel Algorithm for Air-Sea Flux Calculation Based on Deep Learning Integrated into CAS-ESM”的代码和数据。
 
